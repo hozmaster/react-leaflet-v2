@@ -1307,10 +1307,10 @@ keyv@^4.5.4:
   dependencies:
     json-buffer "3.0.1"
 
-leaflet-calendar@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/leaflet-calendar/-/leaflet-calendar-1.1.4.tgz#93e7da1d1fa330dc21a0a7c469da991d9e7dcbef"
-  integrity sha512-UaW+gzF/NpOKbyFBGi1a5hDHiHn6vjP4Atj7QsUXa1Q5GUP+GtRofYxZnemo1eVMYJN7kRC2eaEw1lMis/J3fQ==
+leaflet-editable@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/leaflet-editable/-/leaflet-editable-1.3.1.tgz#64329aeac8fd4b6721543ae820e16faa8959fa37"
+  integrity sha512-P0j8/w3SWYGyc+1SRYdt6VLjTfyjtZhCa9Zuk1n0+iBYJzA4jen3+E2GvB52BPRU6NdWRL4+ZMMN0FdxqSedfg==
 
 leaflet@^1.9.4:
   version "1.9.4"

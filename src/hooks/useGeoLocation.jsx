@@ -11,22 +11,22 @@ export default function useGeoLocation() {
     });
 
     useEffect(() => {
-        const geo = navigator.geolocation;
-
-        function onSuccess(position) {
-            setPosition({
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-            })
-        }
-
-        function onError(error) {
-            console.error('Error retrieving geolocation', error);
-        }
-
-        const watcher = geo.watchPosition(onSuccess, onError);
-
-        return () => geo.clearWatch(watcher);
+        // const geo = navigator.geolocation;
+        //
+        // function onSuccess(position) {
+        //     setPosition({
+        //         latitude: position.coords.latitude,
+        //         longitude: position.coords.longitude,
+        //     })
+        // }
+        //
+        // function onError(error) {
+        //     console.error('Error retrieving geolocation', error);
+        // }
+        //
+        // const watcher = geo.watchPosition(onSuccess, onError);
+        //
+        // return () => geo.clearWatch(watcher);
     }, []);
 
     return position;
