@@ -7,7 +7,6 @@ import "leaflet-editable/src/Leaflet.Editable.js"
 
 import {useEffect, useRef} from "react";
 import useLocalStorage from "../hooks/useLocalStorage.jsx";
-// import useGeoLocation from "../hooks/useGeoLocation.jsx";
 
 const Map = () => {
     const mapRef = useRef(null);
@@ -19,18 +18,61 @@ const Map = () => {
     })
 
     const [zoomLevel, setZoomLevel] = useLocalStorage("zoomLevel", 13);
-
     const [nearbyMarkers, setNearbyMarkers] = useLocalStorage('nearby_markers', [])
-    // const location = useGeoLocation()
 
     useEffect(() => {
-        mapRef.current = L.map('map').setView([userPosition.latitude, userPosition.longitude], 13);
+        if (mapRef.current._leaflet_id !== undefined) {
+            return;
+        }
 
+        mapRef.current = L.map('map', {editable: true}).setView([userPosition.latitude, userPosition.longitude], zoomLevel);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: zoomLevel,
-            mapConfig: {zoomControl: false},
+            zoom: zoomLevel,
+            mapConfig: {zoomControl: true},
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(mapRef.current);
+
+        L.EditControl = L.Control.extend({
+            options: {
+                position: 'topleft',
+                callback: null,
+                kind: '',
+                html: ''
+            },
+            onAdd: function (map) {
+                const container = L.DomUtil.create('div', 'leaflet-control leaflet-bar'),
+                    link = L.DomUtil.create('a', '', container);
+
+                link.href = '#';
+                link.title = 'Create a new ' + this.options.kind;
+                link.innerHTML = this.options.html;
+                L.DomEvent.on(link, 'click', L.DomEvent.stop)
+                    .on(link, 'click', function () {
+                        window.LAYER = this.options.callback.call(mapRef.current.editTools);
+                    }, this);
+
+                // container.style.display = 'block';
+                // mapRef.current.editTools.on('editable:enabled', function (e) {
+                //     container.style.display = 'none';
+                // });
+                // mapRef.current.editTools.on('editable:disable', function (e) {
+                //     container.style.display = 'block';
+                // });
+                return container;
+            }
+        });
+
+
+        L.NewPolygonControl = L.EditControl.extend({
+            options: {
+                position: 'topleft',
+                callback: mapRef.current.editTools.startPolygon,
+                kind: 'polygon',
+                html: '▰'
+            }
+        })
+
+        mapRef.current.addControl(new L.NewPolygonControl());
 
         nearbyMarkers.forEach(({latitude, longitude}) => {
             L.marker([latitude, longitude])
@@ -45,6 +87,11 @@ const Map = () => {
             // console.log(changedPos);
         });
 
+        mapRef.current.addEventListener("zoom", (e) => {
+            const zoomLevel = mapRef.current.getZoom();
+            setZoomLevel(zoomLevel);
+        });
+
         mapRef.current.addEventListener("moveend", (e) => {
             const position = mapRef.current.getCenter();
             if (position) {
@@ -53,25 +100,25 @@ const Map = () => {
         })
     }, []);
 
-    useEffect(() => {
-        // setUserPosition({...userPosition});
-        // if (userMarkerRef.current) {
-        //     mapRef.current.removeLayer(userMarkerRef.current);
-        // }
-
-        // userMarkerRef.current = L
-        //     .marker([location.latitude, location.longitude])
-        //     .addTo(mapRef.current)
-        //     .bindPopup("User");
-        //
-        // const el = userMarkerRef.current.getElement();
-        // if (el) {
-        //     el.style.filter = "hue-rotate(120deg)";
-        // }
-        //
-        // mapRef.current.setView([userPosition.latitude, userPosition.longitude]);
-
-    }, [location, userPosition.latitude, userPosition.longitude]);
+    // useEffect(() => {
+    //     // setUserPosition({...userPosition});
+    //     // if (userMarkerRef.current) {
+    //     //     mapRef.current.removeLayer(userMarkerRef.current);
+    //     // }
+    //
+    //     // userMarkerRef.current = L
+    //     //     .marker([location.latitude, location.longitude])
+    //     //     .addTo(mapRef.current)
+    //     //     .bindPopup("User");
+    //     //
+    //     // const el = userMarkerRef.current.getElement();
+    //     // if (el) {
+    //     //     el.style.filter = "hue-rotate(120deg)";
+    //     // }
+    //     //
+    //     // mapRef.current.setView([userPosition.latitude, userPosition.longitude]);
+    //
+    // }, [location, userPosition.latitude, userPosition.longitude]);
 
     return (
         <div id="map" ref={mapRef}></div>
