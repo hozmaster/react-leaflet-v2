@@ -4,6 +4,7 @@
 
 import L from 'leaflet'
 import "leaflet-editable/src/Leaflet.Editable.js"
+import "leaflet.pinsearch/src/Leaflet.PinSearch.js"
 
 import {useEffect, useRef} from "react";
 import useLocalStorage from "../hooks/useLocalStorage.jsx";
@@ -30,6 +31,23 @@ const Map = () => {
             zoom: zoomLevel,
             mapConfig: {zoomControl: true},
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(mapRef.current);
+
+        L.marker([51.505, -0.09], { title: 'Marker 1' }).addTo(mapRef.current);
+        L.marker([51.51, -0.1], { title: 'Marker 2' }).addTo(mapRef.current);
+        L.marker([51.515, -0.09], { title: 'Marker 3' }).addTo(mapRef.current);
+
+        const searchBar = L.control.pinSearch({
+            position: 'topright',
+            placeholder: 'Search...',
+            buttonText: 'Search',
+            onSearch: function(query) {
+                console.log('Search query:', query);
+                // Handle the search query here
+            },
+            searchBarWidth: '200px',
+            searchBarHeight: '30px',
+            maxSearchResults: 3
         }).addTo(mapRef.current);
 
         L.EditControl = L.Control.extend({
