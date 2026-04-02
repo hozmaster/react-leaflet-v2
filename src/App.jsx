@@ -1,10 +1,10 @@
-import Map from "./components/Map";
+import MapLibre from "./components/MapLibre.jsx";
 
 function App() {
 
     return (
         <>
-            <Map/>
+            <MapLibre/>
         </>
     )
 }
