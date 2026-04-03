@@ -34,12 +34,6 @@ const MapLibre = () => {
         //      */
         //     visualizeRoll?: boolean;
         // };
-        // map.addControl(new maplibregl.NavigationControl({
-        //     showCompass: true,
-        //     showZoom: true,
-        //     visualizePitch: true,
-        // }), 'top-right');
-
         // You can now safely call most MapLibre methods:
         // 65.01236 25.46816
         map.flyTo({ center: [25.46816, 65.01236], zoom: 12 });
@@ -61,14 +55,31 @@ const MapLibre = () => {
                     width: '100%',
                     height: '100%',
                 }}
-                mapStyle="https://tiles.openfreemap.org/styles/liberty"
+                mapStyle={{
+                    version: 8,
+                    sources: {
+                        'raster-tiles': {
+                            type: 'raster',
+                            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+                            tileSize: 256,
+                            attribution: '© OpenStreetMap contributors'
+                        }
+                    },
+                    layers: [{
+                        id: 'simple-tiles',
+                        type: 'raster',
+                        source: 'raster-tiles',
+                        minzoom: 0,
+                        maxzoom: 22
+                    }]
+                }}
                 onLoad={onMapLoad}
             >
-                {/*<NavigationControl*/}
-                {/*    position="top-left"*/}
-                {/*    showZoom={true}*/}
-                {/*    showCompass={true}*/}
-                {/*/>*/}
+            <NavigationControl
+                position="top-left"
+                showZoom={true}
+                showCompass={true}
+            />
             </Map>
         </div>
     )
