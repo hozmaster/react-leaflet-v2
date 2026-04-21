@@ -3,13 +3,34 @@
  */
 
 import 'maplibre-gl/dist/maplibre-gl.css';
-import {Map, NavigationControl} from '@vis.gl/react-maplibre';
-import {useCallback, useRef} from "react";
+import {Map, Marker, NavigationControl, Popup} from '@vis.gl/react-maplibre';
+import {useCallback, useRef, useState} from "react";
 import type { MapRef } from '@vis.gl/react-maplibre';
-import {NavigationControlOptions} from "maplibre-gl";
+
+// 60.17101772676071, 24.94147543362352
+
+const locations = [
+    {
+        id: 1,
+        longitude: 24.9414754336235,
+        latitude: 60.17101772676071,
+        title: 'Helsingin päärautatieasema',
+        description: 'The main railway station of the Finland.',
+    },
+    {
+        id: 2,
+        longitude: 24.92518563853449,
+        latitude: 60.17301930560103,
+        title: 'Temppleliaukio Church',
+        description: 'Communion Service in Temppeliaukio Church in Sundays 10.00-12.00.',
+    },
+];
 
 const MapLibre = () => {
     const mapRef = useRef<MapRef>(null);
+    const [selectedId, setSelectedId] = useState(null);
+    const selectedLocation = locations.find((loc) => loc.id === selectedId);
+
 
     const onMapLoad = useCallback(() => {
         const map = mapRef.current;
@@ -50,6 +71,33 @@ const MapLibre = () => {
                 }}
                 onLoad={onMapLoad}
             >
+                {locations.map((loc) => (
+                    <Marker
+                        key={loc.id}
+                        longitude={loc.longitude}
+                        latitude={loc.latitude}
+                        color="#FF0000"
+                        onClick={(e) => {
+                            e.originalEvent.stopPropagation(); // Prevent map click from closing popup
+                            setSelectedId(loc.id);
+                        }}
+                    />
+                ))}
+
+                {selectedLocation && (
+                    <Popup
+                        longitude={selectedLocation.longitude}
+                        latitude={selectedLocation.latitude}
+                        offset={25}                    // Shift popup up to avoid overlapping marker
+                        closeOnClick={false}           // Keep open when clicking elsewhere on map
+                        onClose={() => setSelectedId(null)}
+                    >
+                        <div style={{padding: '10px', minWidth: '200px'}}>
+                            <h3>{selectedLocation.title}</h3>
+                            <p>{selectedLocation.description}</p>
+                        </div>
+                    </Popup>
+                )}
             <NavigationControl
                 position="top-left"
                 showZoom={true}
