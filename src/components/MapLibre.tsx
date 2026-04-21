@@ -14,42 +14,17 @@ const MapLibre = () => {
     const onMapLoad = useCallback(() => {
         const map = mapRef.current;
         if (!map) return;
-        console.log('Map is ready!', map);
-
-        // export type NavigationControlOptions = {
-        //     /**
-        //      * If `true` the compass button is included.
-        //      */
-        //     showCompass?: boolean;
-        //     /**
-        //      * If `true` the zoom-in and zoom-out buttons are included.
-        //      */
-        //     showZoom?: boolean;
-        //     /**
-        //      * If `true` the pitch is visualized by rotating X-axis of compass.
-        //      */
-        //     visualizePitch?: boolean;
-        //     /**
-        //      * If `true` the roll is visualized by rotating the compass.
-        //      */
-        //     visualizeRoll?: boolean;
-        // };
-        // You can now safely call most MapLibre methods:
-        // 65.01236 25.46816
-        map.flyTo({ center: [25.46816, 65.01236], zoom: 12 });
-        // map.setZoom(10);
-        // map.getBounds(), map.queryRenderedFeatures(), etc.
+        // map.flyTo({ center: [25.46816, 65.01236], zoom: 12 });
     }, []);
-
 
     return (
         <div style={{width: '100vw', height: '100vh'}}>
             <Map
                 ref={mapRef}
                 initialViewState={{
-                    longitude: -100,
-                    latitude: 40,
-                    zoom: 15
+                    longitude: 24.927723,
+                    latitude: 60.163787,
+                    zoom: 13
                 }}
                 style={{
                     width: '100%',
@@ -78,7 +53,7 @@ const MapLibre = () => {
             <NavigationControl
                 position="top-left"
                 showZoom={true}
-                showCompass={true}
+                showCompass={false}
             />
             </Map>
         </div>
