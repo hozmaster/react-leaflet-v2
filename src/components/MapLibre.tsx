@@ -8,25 +8,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import type {MapRef} from '@vis.gl/react-maplibre';
 import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder';
 import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css';
-import localization from "@maplibre/maplibre-gl-geocoder/lib/localization";
 import {finnish_pois} from "../Library/POI.js";
-
-// const geocoderStyles = `
-//   .maplibregl-ctrl-geocoder .suggestions {
-//     width: 380px !important;
-//     max-width: 92vw !important;
-//     min-width: 320px !important;
-//   }
-//   .maplibregl-ctrl-geocoder .suggestions li {
-//     white-space: normal !important;
-//     word-break: break-word !important;
-//     line-height: 1.45 !important;
-//     padding: 10px 14px !important;
-//   }
-//   .maplibregl-ctrl-geocoder {
-//     width: 380px !important;
-//   }
-// `;
 
 function obj2Feature(obj) {
     return {
