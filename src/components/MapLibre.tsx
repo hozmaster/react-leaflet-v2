@@ -11,6 +11,23 @@ import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css';
 import localization from "@maplibre/maplibre-gl-geocoder/lib/localization";
 import {finnish_pois} from "../Library/POI.js";
 
+// const geocoderStyles = `
+//   .maplibregl-ctrl-geocoder .suggestions {
+//     width: 380px !important;
+//     max-width: 92vw !important;
+//     min-width: 320px !important;
+//   }
+//   .maplibregl-ctrl-geocoder .suggestions li {
+//     white-space: normal !important;
+//     word-break: break-word !important;
+//     line-height: 1.45 !important;
+//     padding: 10px 14px !important;
+//   }
+//   .maplibregl-ctrl-geocoder {
+//     width: 380px !important;
+//   }
+// `;
+
 function obj2Feature(obj) {
     return {
         type: "Feature",
@@ -18,13 +35,12 @@ function obj2Feature(obj) {
             type: "Point",
             coordinates: [obj.longitude, obj.latitude]
         },
-        place_name: obj.name,
+        place_name: obj.name + ',' + obj.city,
         properties: {
             place_id: obj.id,
-            // name: obj.description,
-            // display_name: obj.city,
+            name: obj.city,
+            display_name: obj.description,
         },
-        text: obj.name,
         center: [
             obj.longitude,
             obj.latitude
@@ -40,8 +56,9 @@ const geocoderApi = {
             const query = config.query;
             finnish_pois.forEach((poi) => {
                 if (poi.city.indexOf(query) >= 0 ||
+                    poi.name.indexOf(query) >= 0 ||
                     poi.description.indexOf(query) >= 0) {
-                        features.push(obj2Feature(poi))
+                    features.push(obj2Feature(poi))
                 }
             });
         } catch (e) {
@@ -83,7 +100,6 @@ const MapLibre = () => {
     const onMapLoad = useCallback(() => {
         const map = mapRef.current;
         if (!map) return;
-        // map.flyTo({ center: [25.46816, 65.01236], zoom: 12 });
     }, []);
 
     // Handle search result
