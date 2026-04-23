@@ -21,17 +21,8 @@ function obj2Feature(obj) {
         place_name: obj.name,
         properties: {
             place_id: obj.id,
-            namee: obj.name,
-            description: obj.description,
-//             display_name: obj.name
-            display_name: "Espinho, Aveiro, Portugali",
-            address: {
-                city: "Espinho",
-                county: "Aveiro",
-                "ISO3166-2-lvl6": "PT-01",
-                country: "Portugali",
-                country_code: "pt"
-            }
+            // name: obj.description,
+            // display_name: obj.city,
         },
         text: obj.name,
         center: [
@@ -46,28 +37,13 @@ const geocoderApi = {
     forwardGeocode: async (config) => {
         const features = [];
         try {
-            const query = encodeURIComponent(config.query);
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=geojson&addressdetails=1&limit=5`
-            );
-            const geojson = await response.json();
-            for (const feature of geojson.features) {
-                const bbox = feature.bbox;
-                const center = [
-                    bbox[0] + (bbox[2] - bbox[0]) / 2,
-                    bbox[1] + (bbox[3] - bbox[1]) / 2,
-                ];
-                features.push({
-                    type: 'Feature',
-                    geometry: {type: 'Point', coordinates: center},
-                    place_name: feature.properties.display_name,
-                    properties: feature.properties,
-                    text: feature.properties.display_name,
-                    center,
-                });
-                // if (location.city.indexOf(config.query) >= 0 ) {
-                //     features.push(obj2Feature(location))
-                // }
-            }
+            const query = config.query;
+            finnish_pois.forEach((poi) => {
+                if (poi.city.indexOf(query) >= 0 ||
+                    poi.description.indexOf(query) >= 0) {
+                        features.push(obj2Feature(poi))
+                }
+            });
         } catch (e) {
             console.error('Geocoding error:', e);
         }
